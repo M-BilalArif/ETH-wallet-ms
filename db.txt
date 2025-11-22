@@ -1,0 +1,44 @@
+CREATE TABLE `gc` (
+  `id`    INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `type` varchar(100),
+  `price` varchar(200),
+  `num` varchar(200),
+  `pin` varchar(200),
+  `exp` varchar(200),
+  `state` varchar(200),
+  `email` varchar(200),
+  `create_lock` DATETIME,
+  `expire_lock` DATETIME 
+);
+
+
+
+
+CREATE TABLE `gct` (
+  `id`    INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `gcNum` varchar(100),
+  `transactionKey` varchar(100) NOT NULL,
+  `address` varchar(200),
+  `currency` varchar(50),
+  `amount` FLOAT,
+  `rate` FLOAT,
+  `btc_expected` FLOAT, 
+  `btc_received` FLOAT,
+  `btc_total_received` FLOAT,
+  `out`   MEDIUMTEXT,
+  `time` DATETIME,
+  `create_date` DATETIME NOT NULL,
+  `expire_date` DATETIME NOT NULL
+);
+
+
+CREATE TABLE `bwApiUsers` (
+  `id`    int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `title` varchar(100),
+  `email` varchar(100),
+  `fee` FLOAT NOT NULL DEFAULT 0.01
+  `xpub`  varchar(200) NOT NULL UNIQUE KEY,
+  `apiUserId` varchar(200) NOT NULL UNIQUE KEY,
+  `apiUserKey` varchar(200) NOT NULL UNIQUE KEY,
+  `create_date` DATETIME DEFAULT CURRENT_TIMESTAMP
+);

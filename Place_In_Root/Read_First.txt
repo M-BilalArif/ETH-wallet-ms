@@ -1,0 +1,5 @@
+Place the folder here called "bwapi" in the root,
+currently it is placed in the Public_html folder of
+"merchant-api.info" 
+
+v120524 PSP
