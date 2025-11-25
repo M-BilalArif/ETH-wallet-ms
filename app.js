@@ -2097,11 +2097,11 @@ $(document).ready(function ()
 
     {
 
-        if ( $("#changeType .addonBox").html() != "฿" )
+        if ( $("#changeType .addonBox").html() != "img/ETHLogo.png" )
 
         {
 
-            $("#changeType .addonBox").html("฿");
+            $("#changeType .addonBox").html("img/ETHLogo.png");
 
             psp.useFiat = false;
 
@@ -2137,11 +2137,11 @@ $(document).ready(function ()
 
     {
 
-        if ( $("#changeType2 .addonBox2").html() != "฿" )
+        if ( $("#changeType2 .addonBox2").html() != "img/ETHLogo.png" )
 
         {
             console.log("1")
-            $("#changeType2 .addonBox2").html("฿");
+            $("#changeType2 .addonBox2").html("img/ETHLogo.png");
 
             psp.useFiat2 = false;
 
