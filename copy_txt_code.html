@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copy TxT</title>
+    <style>
+       .copy-word {
+
+        }
+    </style>
+</head>
+<body>
+
+    <p>Click on the word below to copy it:</p>
+    <p><span class="copy-word" onclick="copyToClipboard('&#8383;')">&#8383;</span></p>
+
+    <script>
+        function copyToClipboard(word) {
+            // Create a temporary input element to hold the text
+            const input = document.createElement('input');
+            input.value = word;
+            document.body.appendChild(input);
+
+            // Select and copy the text
+            input.select();
+            input.setSelectionRange(0, 99999); // For mobile devices
+
+            // Execute the copy command
+            document.execCommand('copy');
+
+            // Remove the input element after copying
+            document.body.removeChild(input);
+
+            // Optional: Alert to notify the user
+            alert('Copied: ' + word);
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+
+<!-- To include the password box option, jump to line 219 (or search "create wallet with password")
+ and remove the comment out tags. And, to adjust the default miner fee go to lines 392, and 600 here 
+ and in App.JS lines 7 and 569 and in RW.JS line 104 -->
+
+<html lang="en">
+<head>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Bitcoin Wallet">
+<meta property="og:url" content="https://Bitcoin.Wallet.ms">
+<meta property="og:image" content="https://bitcoin.wallet.ms/img/PSP-BTC.png">
+<meta property="og:description" content="Bitcoin.Wallet.ms - Simple 'n Secure">
+    <meta charset="utf-8">
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css">
+<script src="modaljquery-1.10.2.min.js"></script>
+<script src="modalbootstrap.min.js"></script>
+  <script type="text/javascript"> 
+    //Call the method on pageload
+    $(window).load(function(){
+      //Disply the modal popup
+        $('#myModal').modal('show');
+    });
+  </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Ethereum.Wallet.ms</title>
+	<meta name="description" content="Ethereum.Wallet.ms is a simple and secure site.">
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="main.css?v=15" rel="stylesheet">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="icon" sizes="150x150" href="img/PSP-BTC.png">
+	<link href='https://fonts.googleapis.com/css?family=Jockey+One' rel='stylesheet' type='text/css'>
+    <link rel="apple-touch-icon" href="img/PSP-BTC.png" />
+<style>
+  ul {
+    list-style-type: none; /* Remove default bullet */
+  }
+ul {
+    list-style-image: url(image/psp_blt.png);
+  }
+
+/*฿ ฿
+
+*/
+
+
+  li::marker {
+    	content: 'ETH - '; /* Custom bullet character (e.g., emoji, symbol) */
+    	color: #ff9900;
+	   font-size: 1.0em; /* Size of the custom bullet */
+  }
+
+
+
+</style>    
+	
+<style>
+        .container {
+            position: relative;
+        }
+    </style>
+    <style>
+        #camera-view {
+        display: none;
+        position: fixed;
+        width: 320px;
+        height: 376px;
+        top: 50%;
+        left: 50%;
+        margin: 0px;
+        z-index: 9999;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        background-color: #222222;
+        padding: 0px;
+        overflow: hidden;
+        transition: 0.4s;
+      }
+      #camera-view.camera-zoom {
+        width: 344px;
+        height: 376px;
+        padding: 0px 0px 64px 24px;
+      }
+      #camera-view .camera-zoom,
+      #camera-side{
+        display: none; position: absolute;
+        bottom: 2px;
+       margin: 0px;
+        width: 48px;
+        height: 48px;
+       z-index: 2;
+        background-color: #ffffff;
+        padding: 8px;
+        border-radius: 50%;
+        border: 1px solid #222222;
+        text-align: center;
+      }
+      #camera-view #camera-side{
+        right: 50%;
+        -webkit-transform: translateX(50%);
+        transform: translateX(50%);
+      }
+      #camera-view.camera-zoom #camera-side{
+        right: 2px;
+        -webkit-transform: none;
+        transform: none;
+      }
+      #camera-view .camera-zoom#camera-zoom-bar{
+        padding: 0px;
+        border: 0px;
+        left: 2px;
+        border-radius: 0px;
+        height: 24px;
+        width: 344px;
+        -webkit-transform: rotate(-90deg);
+        transform: rotate(-90deg);
+        transform-origin: 4px 4px;
+      }
+      #camera-view .camera-zoom#camera-zoom-out{
+        left: 32px;
+      }
+      #camera-view .camera-zoom#camera-zoom-in{
+        left: 84px;
+      }
+      #camera-view.camera-zoom .camera-zoom#camera-zoom-bar,
+      #camera-view.camera-zoom .camera-zoom#camera-zoom-out,
+      #camera-view.camera-zoom .camera-zoom#camera-zoom-in{
+        display: inline-block;
+      }
+      #camera-view .camera-zoom#camera-zoom-out:disabled,
+      #camera-view .camera-zoom#camera-zoom-out:disabled{
+        opacity: 0.4;
+      }
+      #camera-reader{
+        width: 320px;
+        height: 320px;
+      }
+      /*
+      #camera-view video,
+      #camera-view #camera-reader,
+      #camera-view #qr-shaded-region{
+        width: 100% !important;
+        height: 100% !important;
+      }
+      */
+      html.modal_showing,
+      body.modal_showing{
+        overflow: hidden;
+      }
+    .auto-style1 {
+	color: #FF0000;
+}
+    .auto-style2 {
+	font-size: x-small;
+}
+    .auto-style3 {
+	font-size: xx-small;
+}
+    .auto-style4 {
+	font-size: xxx-small ( 6 pt);
+}
+    </style>
+</head>
+<body style="background-color: #c6c5d4;">
+    <nav class="banner navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="text-left">
+                        <div class="logo">
+                        <!--    <a class="" href="https://psp.llc" target="_blank"> -->
+                                <span>
+                                    <img src="img/hawordETH_logo.png" alt="" style="width: 498px;">
+                                </span>
+                                <span style="padding-left: 5px; color: #fff; " class="auto-style3">
+                                    </span>
+                                <span style="padding-left: 5px; color: #fff; " class="auto-style3">
+                                    </span>
+                                <span style="padding-left: 5px; color: #fff; " class="auto-style4">
+                                    </span>
+                                <span style="padding-left: 5px; color: #fff; " class="auto-style4">
+                                    <a href="https://psp.llc" target="_blank">
+							<span class="auto-style3"></span></a></span><span style="padding-left: 5px; color: #fff; " class="auto-style4"><span class="auto-style4"><span class="auto-style3"></span></span></span><span style="padding-left: 5px; color: #fff; " class="auto-style3"><span style="padding-left: 5px; color: #fff; font-size: 6pt;">
+                                    </span>
+                              </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="row">
+                    <div class="text-center">
+                        <div class="logo">
+                            <a class="" >
+                                <a class="" href="https://psp.llc" target="_blank">
+				<img src="img/PSP_512.png" alt="" style="width: 40px;">
+				<!--			<span>
+                                    <a href="https://freename.io" target="_blank">
+                                       <img id="logo3" src="img/fn_lndscp.png">
+                                    </a>
+                                </span> -->
+                              </a>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                    <div class="row">
+                        <!-- <div id="priceBox">
+                            <div id="price"></div>
+                            <div id="chartBox">
+                                <div id="chart24" style="width: 245px; height: 150px; padding: 0px; position: relative;margin:0 auto;"></div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+<!--             <a class="brand" href="/" >
+                <img src="img/logo.png" alt="" style="margin-top: -4px; width: 129px;">
+            </a> -->
+            <!-- use this api for get price and show it in price box 
+            https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT-->
+            
+            
+            
+            <div id="priceBox">
+                <div id="price" style="color: #fff; font-weight: bold; font-size: 14px;">Loading...</div>
+                <div id="chartBox">
+                    <div id="chart24" style="width: 245px; height: 150px; padding: 0px; position: relative;margin:0 auto;"></div>
+                </div>
+            </div>
+            <div id="settings"></div>
+            <div id="info"><span class="glyphicon glyphicon-info-sign"></span></div>
+        </div>
+    </nav>
+    <div class="container">
+        <div id="apiErrorBox" style="display:none">
+        Cannot display wallet balance, the API is temporarily down.  This does NOT affect your Ethereum or your wallet just this site's ability to display balances and transactions.  Check back in a couple of minutes, or clear your browser cache and restart.
+        </div>
+    </div>
+    <div id="generate">
+        <section class="dark">
+            <div class="container">
+				<div id="leadTxt">Drag your finger randomly inside the box until your new Ethereum wallet appears</div>
+
+			<!--	<div id="passBox">
+					<div id="passBoxTxt">
+						<div class="KKCheck">
+							<div class="KKCheckInner"><span class="glyphicon glyphicon-ok" id="checkIcon"></span></div>	
+						</div> 
+						Create wallet with password
+					</div> -->
+
+                <div id="tapBox" class="tapBox">
+ 					<div id="code"></div>
+					<div class="ripples" class="tapBox">  
+					  <div class="ripple ripple-1" class="tapBox"></div>
+					  <div class="ripple ripple-2" class="tapBox"></div>
+					  <div class="ripple ripple-3" class="tapBox"></div>
+					</div>
+                    <div id="progressLockBox">
+                        <div id="progressFill"></div>
+                        <img src="img/ETHCenter_Logo.png" alt="" id="progressLockImg" class="tapBox" width="236">
+                    </div>
+                </div>
+                <div id="createPassword" class="bg-warning">
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="createPasswordTxt">
+                        <span class="input-group-btn">
+							<button type="button" class="btn btn-success" id="createWallet"  disabled="disabled">Create Wallet</button>
+			      		</span>
+                    </div>
+                </div>
+                <div id="openPassword" class="bg-warning">
+					<div class="input-group">
+                        <input type="password" class="form-control" id="openPasswordTxt">
+                        <span class="input-group-btn">
+							<button type="button" class="btn btn-success" id="openWallet"  disabled="disabled">Open Wallet</button>
+			      		</span>
+                    </div>
+                </div>
+                <div class="alert alert-danger" id="loginError"></div>
+            </div>
+        </section>
+    </div>
+    <div id="wallet" class="container">
+    	<div id="saveURL">
+            <div>WARNING: BOOKMARK THIS PAGE TO SAVE YOUR WALLET,<br>
+            OR YOU WILL LOSE YOUR Ethereum FOREVER!<br>
+            To Set the Transaction Fee, Click on the Settings Icon Above.</div>
+        </div>
+    	<div id="addressBox">
+            <div id="addressTxt" style="color: black;">Your Ethereum Address <span id="networkIndicator" style="font-size: 12px; color: #ff9900; font-weight: bold;"></span></div>
+            <span id="address" style="color: black;"></span>
+        </div>
+        
+        <div id="walletInfo">
+            <div class="container">
+                <div class="">
+                    <div id="leftInfo">
+                        <div id="walletName"></div>
+                        <div class="balance">
+                            <img src="img/ETHLogo.png" alt="" width="20">
+                            <span id="btcBalance"></span>
+                        </div>
+                        <div class="currency">
+                            <span id="currencyValue">USD</span> <span id="fiatValue"></span>
+                        </div>
+                    </div>
+                    <div class="qr-link">
+                        <img src="assets/img/qr.jpg" class="qrimage smallQR">
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <!--start dmn-->
+        <div id="camera-view">
+            <img id="camera-side" alt="&lt;&gt;" src="./camera-rotate.png" width="64" height="64"/>
+            <input id="camera-zoom-bar" class="camera-zoom" type="range" value="0" min="0" max="100"/>
+            <img id="camera-zoom-in" class="camera-zoom" alt="+" src="./camera-zoom-in.png" width="64" height="64"/>
+            <img id="camera-zoom-out" class="camera-zoom" alt="-" src="./camera-zoom-out.png" width="64" height="64"/>
+            <div id="camera-reader"></div>
+        </div>
+        <!--<div id="qrvidBox" style="display: none;">
+            <div class="container">
+                <div id="qrvideo" class="qrimage">
+                    <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+                </div>
+            </div>
+        </div>-->
+        <!--end dmn-->
+        <div id="tabButtons">
+            <a class="tabButton" id="receiveBoxBtn">
+                <img src="img/recolored_recieved.png" alt="" class="btnIcon"> Receive</a>
+            <a class="tabButton" id="sendBoxBtn">
+                <img src="img/send.png" alt="" class="btnIcon" id="sendIcon"> Send</a>
+            <div class="clearfix"></div>
+        </div>
+        <div id="actions">
+            <div id="receiveBox">
+                <div class="actionText">Generate a payment request</div>
+				<div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="changeType2"><span class="glyphicon glyphicon-sort"></span> <span class="addonBox2">img/ETHLogo.png</span> </span>
+                        <input class="form-control" placeholder="Amount" id="txtReceiveAmount" type="text" autocapitalize="off" autocorrect="off">
+                        <span class="input-group-btn">
+                        	<span id="fiatPrice2"></span>
+                			<a class="btn btn-success" id="generateBtn" disabled="disabled">Generate</a>				
+                        </span>
+                    </div>
+                 </div>
+            </div>
+            <div id="sendBox">
+                <div class="actionText">Send</div>
+				<div class="alert alert-warning" id="errorBox">
+					<div id="errorTxt"></div>
+				</div>
+                <div class="form-group">
+                    <div class="input-group" style="width:100%">
+                        <input type="text" class="form-control" placeholder="Enter Ethereum Address or Domain address or Email Address or Click Icon to Scan QR >>>>>" id="txtAddress" autocapitalize="off" autocorrect="off">
+                        <span class="input-group-addon"><!-- <a href="" id="qrlink"> --><span class="glyphicon glyphicon-camera" id="qrscan"></span></a></span>
+                        <div id="oneNameInfo">
+                        	<div id="oneNameName"></div>
+                        	<div id="oneNameImg"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon" id="changeType"><span class="glyphicon glyphicon-sort"></span> <span class="addonBox">img/ETHLogo.png</span> </span>
+                        <input class="form-control" placeholder="Amount" id="txtAmount" type="text" autocapitalize="off" autocorrect="off">
+                        <span class="input-group-btn">
+                        	<span id="fiatPrice"></span>
+                			<a class="btn btn-success" id="sendBtn" >Send</a>
+                        </span>
+                    </div>
+                </div>
+			</div>
+            </div>
+        </div>
+    <div class="container" id="txList">
+        <div id="txTitle">Transaction History</div>
+        <div class="break"></div>
+        <div id="noTx">No transactions</div>
+        <div class="table-responsive" id="txBox">
+            <table class="table table-hover" id="txTable">
+                <thead>
+                    <tr id="tableHeader">
+                        <th style="border-radius:7px 0 0 7px;">Date</th>
+                        <th class="hidden-sm hidden-xs">Tx ID</th>
+                        <th class="hidden-sm hidden-xs">Confirmations</th>
+                        <th style="border-radius:0 7px 7px 0; padding-right:40px; text-align:right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody id="txBody">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+			<div class="modal fade" id="infoModal">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-body">
+			                <div class="modalBox orangeLinks">
+			                	<div class="modalTitle">
+			                		<div class="closeModal">
+			                			<span class="glyphicon glyphicon-remove"></span>
+			                		</div>
+			                		<span class="auto-style2">Help/Terms of Use | <span>&copy;</span> Copyright 2025 All Rights Reserved | <a href="https://psp.llc" target="_blank">PSP.LLC</a> | support@psp.llc | v081825
+			                		</span> 
+			                	</div>
+                                <div id="infoLogo"><img src="img/hawordETH_logo.png" alt=""></div>
+			                	<div class="infoText">This SSL secure website (see the lock icon in the address bar) is provided as a simple, quick and secure Ethereum Wallet. <p style="font-weight: bold; color: red;">WARNING - YOU MUST SAVE THE URL ADDRESS OR YOU WILL LOSE YOUR Ethereum FOREVER!</p></div><a href="https://www.ssltrust.com.au/security-report?domain=bitcoin.wallet.ms" rel="nofollow" target="new"><img src="https://seals.ssltrust.com.au/report_medium.png" style="border: 0px;"></a>
+			                	<div class="infoTitle">Only You Should Have Control of Your Wallet and Ethereum </div>
+			                	<div class="infoText">This website does not hold or have access to your Ethereum or private keys. All information is stored on the client-side, so only you have control of your wallet and your Ethereum.</div>
+			                	<div class="infoTitle">Your URL is Your Key, do not share the URL!</div>
+			                	<div class="infoText">Bookmark your wallet’s secret URL to access your Ethereum wallet in the future. Please note, this is your private URL so do not share it with anyone. <b><p style="font-weight: bold; color: red;">WARNING if you lose this URL your Ethereum will be lost forever!</p></b></div>
+			                	<i>Please note, all transactions sent from your wallet include a <span id='defaultFeePlaceholder'>0.000007</span> mining fee. This fee helps support the Ethereum network and ensures your transaction goes through quickly, this wallet does not receive any part of this fee.</i>
+			                	<div class="infoTitle">Send Options</div>
+			                	<div class="infoText">
+									<ul class="infoSendOptions">
+									<li>Copy and paste any Ethereum address into the SEND field</li>
+									<li>Tap the camera icon to scan a QR code that represents a Ethereum address</li>
+									<li>Enter a valid email address</li>
+									<li>Enter "NFC18" and place blank NFC tag to the back of your phone</li>
+			   						<li>Enter "MAX" in the Amount field to send the full amount in your wallet</li>
+             					</div>
+								<div class="infoTitle">Ethereum Price Indicator</div>
+			                	<div class="infoText">The Ethereum price shown in the top header is the <a href="https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT" target="_blank">BinanceEthereumAPi</a> price shown in USD.</div>
+			                	<div class="infoTitle">Terms of Use</div>
+			                	<div class="infoText"></a> PLEASE NOTE: PSP.LLC and Ethereum.Wallet.ms is not responsible for any Ethereum that may be lost or stolen as a result of using this website. By using this website, you agree to the Terms and Conditions located here; <a href="https://psp.llc/terms" target="_blank">https://psp.llc/terms</a> and you assume complete responsibility to protect your URL Ethereum Wallet address and the private key associated with your Ethereum wallet. This website uses the open source Ethereum protocols and other industry standard open source tools. Learn more about Ethereum at <a href="https://ethereum.org" target="_blank">Ethereum.org</a> or at <a href="https://en.wikipedia.org/wiki/Ethereum" target="_blank">Wikipedia</a></div>
+			                </div>
+			            </div>
+			        </div>
+			        <!-- /.modal-content -->
+			    </div>
+			    <!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+	        <div class="modal fade" id="request">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <div class="modalBox">
+	                        	<div class="modalTitle">
+	                        		<div class="closeModal">
+	                        			<span class="glyphicon glyphicon-remove"></span>
+	                        		</div>
+	                        		Receive
+	                        	</div>
+	                        	<p>Requesting <span id="generateAmount"></span> ETH to:
+	                        	    <br>
+	                        	    <small><span id="generateAddress"></span></small>
+	                        	</p>
+                                <div style="background-color: #fff;
+                                            width: fit-content;
+                                            padding: 7px;
+                                            display: table;
+                                            margin: 0 auto;"
+                                >
+	                        	<img src="assets/img/qr.jpg" class="qrimage" id="receiveQR">
+                                </div>
+                                <br/>
+                                <div id="requestHelpText">
+                                    <p></p>
+                                </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- /.modal-content -->
+	            </div>
+	            <!-- /.modal-dialog -->
+	        </div>
+	        <!-- /.modal -->
+	        <div class="modal fade" id="passwordInfoModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="modalBoxLeft">
+                                <div class="modalTitle">
+                                    <div class="closeModal">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </div>
+                                </div>
+                                <div class="orangeText"></div>
+                                <div class="blueText"></div>
+                                <div class="grayText"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- /.modal -->
+            <div class="modal fade" id="settingsModal">
+	            <div class="modal-dialog">
+	                <div class="modal-content">
+	                    <div class="modal-body">
+	                        <div class="modalBox">
+	                        	<div class="modalTitle">
+	                        		<div class="closeModal">
+	                        			<span class="glyphicon glyphicon-remove"></span>
+	                        		</div>
+	                        		<div id="settingsTitle">
+                                        <span class="glyphicon glyphicon-chevron-left"></span>  
+                                        <span id="settingsTitleText">Settings</span>       
+                                    </div>
+	                        	</div>
+                                <div id="settingsChoices">
+                                    <div class="settingsChoice" id="choiceMining">
+                                        <div class="settingsChoiceIcon"></div>
+                                        <div class="settingsChoiceText">Set Transaction<br/>Mining Fee</div>
+                                    </div>
+                                    <div class="settingsChoice" id="choiceCurrency">
+                                        <div class="settingsChoiceIcon"></div>
+                                        <div class="settingsChoiceText">Set<br/>Currency</div>
+                                    </div>
+                                    <div class="settingsChoice" id="choiceExport">
+                                        <div class="settingsChoiceIcon"><span class="glyphicon glyphicon-export"></span></div>
+                                        <div class="settingsChoiceText">Export<br/> Keys</div>
+                                    </div>
+                                    <div class="settingsChoice" id="choiceSweep">
+                                        <div class="settingsChoiceIcon"><span class="glyphicon glyphicon-import"></span></div>
+                                        <div class="settingsChoiceText">Sweep<br/> Keys</div>
+                                    </div>
+                                    <div class="clearfix"></div> 
+                                    <div class="clearfix"></div> 
+                                </div>
+                                <div id="settingsCurrency">
+                                    <div class="form-group">
+                                      <label for="currencySelect">Active currency</label>
+                                      <select id="currencySelect" class="form-control">
+                                      </select>
+                                    </div>
+                                </div>
+                                <div id="importRequestBox">
+                                    <div>Import your <span class="invoiceType"></span> by entering the ID below</div>
+                                    <div id="importRequestBoxInner">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="importRequestID" placeholder="Enter ID">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-success" id="importRequestBtn"  disabled="disabled">Import</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="settingsInvoice">
+                                    <div class="orangeBox" id="newRequestMsg"></div>
+                                    <input type="hidden" value="" id="invoiceType">
+                                    <div id="invoiceCountLine">
+                                        <div id="leftCountLine"> 
+                                            Saved
+                                            <span style='color: #7a6464;'>(<span id="invoiceCount">0</span>)</span>
+                                        </div>
+                                        <div id="rightCountLine">
+                                            <span class="importRequest">Import <span class="invoiceType"></span></span>
+                                            <button type="submit" class="btn btn-success" id="btnNewRequest">Create Request</button>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div id="noInvoice">
+                                        <button class="btn btn-success" id="getStarted">Create a <span class="invoiceType"></span></button>
+                                        <div class="importRequest">Import <span class="invoiceType"></span></div>
+                                    </div>
+                                    <div class="form-group" id="requestForm">
+                                        <label>Title</label>
+                                        <input type="text" class="form-control" placeholder="Title" id="txtInvoiceTitle">
+                                        <label>Amount Requested</label>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">?</span>
+                                            <input class="form-control" placeholder="Amount" id="txtInvoiceAmount" type="text" autocapitalize="off" autocorrect="off">
+                                        </div>
+                                        <label><span class="invoiceType"></span> ID</label>
+                                        <input type="text" class="form-control" placeholder="Invoice ID" id="txtInvoiceID">
+                                        <div id="youtubeLinkBox">
+                                            <label>YouTube URL (optional)</label>
+                                            <input type="text" class="form-control" placeholder="Youtube Link" id="txtYoutube">
+                                        </div>
+                                        <label>Description (optional)</label>
+                                        <textarea  class="form-control" placeholder="Description" id="txtInvoiceDescription"></textarea>
+                                        <br/>
+                                        <div>
+                                            <button type="submit" class="btn btn-success" id="btnCreateInvoice" disabled="disabled" style="float:left;">Create SmartRequest</button>
+                                            <div style="" id="cancelBtn">Cancel</div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive" id="invoiceTx" style="border:0;">
+                                        <table class="table table-hover" >
+                                            <thead>
+                                                <tr id="tableHeader">
+                                                    <th style="border-radius:7px 0 0 7px;">Title</th>
+                                                    <th>Request ID</th>
+                                                    <th style="" class="hidden-sm hidden-xs" id="headerBalance"></th>
+                                                    <th style="" id="headerAmount"></th>
+                                                    <th style="border-radius:0 7px 7px 0; padding-right:40px; text-align:right;width:100px;"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="invoicesBody">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                 </div>
+                                <div id="settingsExport">
+                                    <div class="form-group">
+                                      <label>Brain Wallet</label>
+                                      <input type="text" class="form-control" id="txtBrain" readonly>                            
+                                      <label>Private Key</label>
+                                      <input type="text" class="form-control" id="txtPrivate" readonly>
+                                    </div>
+                                </div>
+                                <div id="settingsSweep">
+                                    <p>Sweep the funds from a private key into this wallet by entering it in WIF below.</p>
+                                    <div id="settingsSweepInner">
+                                        <div class="input-group">
+                                            <input autocomplete="off" type="text" class="form-control" id="settingsSweepWIF" placeholder="Enter private key in WIF">
+                                            <span class="input-group-btn">
+                                                <button disabled="disabled" type="button" class="btn btn-success" id="settingsSweepBtn" >Sweep</button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="settingsMining">
+                                    <div id="settingsMiningInfo">The Ethereum processing network requires a fee to be paid for each transaction. The fee rewards the miner that includes it in a block. You may change the fee below to alter the default mining fee. This wallet receives no part of the fee.</div>
+                                    <div class="break"></div>
+                                    <div class="miningOption">
+                                        <div class="miningOptionLeft">
+                                            <div class="settingsOption" type="normal"></div>
+                                            <div class="settingsOptionText">Normal</div>
+                                        </div>
+                                        <div class="miningOptionRight"> A fixed miner fee policy of 0.00019 ETH will be used. <span class="blueText">Recommended.</span></div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="break"></div>
+                                    <div class="miningOption">
+                                        <div class="miningOptionLeft">
+                                            <div class="settingsOption" type="custom"></div>
+                                            <div class="settingsOptionText">Custom</div>
+                                        </div>
+                                        <div class="miningOptionRight">
+                                            Set a custom miner fee (per Wei).
+                                            <div class="form-group" id="feeHolder">
+                                                <div class="input-group">
+                                                    <span class="input-group-addon">?</span>
+                                                    <input class="form-control" placeholder="Miner Fee" id="txtFeeAmount" type="text" autocapitalize="off" autocorrect="off">
+                                                    <span id="fiatPriceFee"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="break"></div>
+                                </div>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- /.modal-content -->
+	            </div>
+	            <!-- /.modal-dialog -->
+	        </div>
+	        <!-- /.modal -->
+			<div class="modal fade" id="confirmModal">
+			    <div class="modal-dialog">
+			        <div class="modal-content">
+			            <div class="modal-body" id="confirmBody">
+			                <div class="modalBox" id="confirmBox" >
+								<p>Confirm that you are sending</p>
+			                	<p id="confirmAmountLine"><span id="confirmAmount"></span> (ETH)</p>
+			                	<p>to the following <span id="recipientType">address</span></p>
+			                	<div id="confirmAddress"></div>
+		                	    <small><span id="generateAddress"></span></small>
+			                </div>
+								<button class="btn btn-default closeConfirm" >Cancel</button>
+                                <button class="btn btn-success" id="confirmSend">Confirm</button>
+                                <button class="btn btn-success" id="gcSendEmail" style="display: none;">Send</button>
+								<div id="minerTxt">Please note, this transaction includes a <span id="txFee"></span> mining fee</div>
+			            </div>
+			        </div>
+			        <!-- /.modal-content -->
+			    </div>
+			    <!-- /.modal-dialog -->
+			</div>
+			<!-- /.modal -->
+    <audio id="noise"></audio>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery-ui.min.js"></script>
+    <script src="js/jquery.flot.min.js"></script>
+    <script src="js/jquery.flot.time.min.js"></script>
+    <script src="js/qrcode.min.js?v=1"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+    <script type="text/javascript">
+        // Wait for ethers.js to load before proceeding
+        (function checkEthers() {
+            if (typeof ethers !== 'undefined' && typeof ethers.utils !== 'undefined') {
+                console.log('Ethers.js loaded successfully');
+            } else {
+                console.warn('Waiting for Ethers.js to load...');
+                setTimeout(checkEthers, 100);
+            }
+        })();
+    </script>
+    <script src="rw.js?v=18"></script>
+    <script src="app.js?v=16"></script>
+    <script src="tx.js"></script>
+    <script src="util.js"></script>
+    <script src="moment.js"></script>
+    <!--<script src="https://unpkg.com/@zxing/library@latest"></script>-->
+    <script src="./html5-qrcode.min.js" type="text/javascript"></script>
+    <script src="qrcoderdr.js"></script>
+    <script type="text/javascript">
+        document.getElementById('qrscan').onclick = function() {
+            //getVideoId();
+            decodeCode();
+        };
+    </script>
+    <script type="text/javascript">
+        // Function to fetch and display ETH price from Binance API
+        function fetchETHPrice() {
+            const apiUrl = 'https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT';
+            const priceElement = $('#price');
+            
+            if (priceElement.length === 0) {
+                return;
+            }
+            
+            // Show loading state
+            priceElement.html('ETH: Loading...');
+            
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    if (data && data.price) {
+                        const price = parseFloat(data.price);
+                        const formattedPrice = price.toLocaleString('en-US', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        });
+                        priceElement.html('ETH: $' + formattedPrice).css({
+                            'color': '#fff',
+                            'font-weight': 'bold',
+                            'font-size': '14px'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching ETH price:', error);
+                    priceElement.html('ETH: Error').css({
+                        'color': '#ff9900',
+                        'font-weight': 'bold'
+                    });
+                }
+            });
+        }
+        
+        // Wait for jQuery and DOM to be ready, then fetch price
+        $(document).ready(function() {
+            // Initial fetch
+            fetchETHPrice();
+            // Update price every 30 seconds
+            setInterval(fetchETHPrice, 30000);
+        });
+    </script>
+<script type="text/javascript">/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                            <h4 class="modal-title"><span class="auto-style1">
+											<strong>WARNING! * Must Read *</strong></span><span class="auto-style3"> | <a href="https://psp.llc" target="_blank">PSP.LLC</a> | <span>&copy;</span> Copyright 2025 | All Rights Rsvd | v081825</span>
+                                            <span class="auto-style3"> </span></h4>
+                                           <!-- <h4 class="modal-title" id="myModalLabel">Modal title Here</h4> -->
+                                        </div>
+                                        <div class="modal-body">
+                                            This is a client side only Ethereum Wallet. After your wallet is securely generated, <span class="auto-style1"><strong>you MUST save your custom URL or you will lose your Ethereum forever!</strong></span> Do not share your secure URL with anyone!<br>
+                                            <br>
+                                            It is strongly suggested that after you create your wallet, you save the URL and return here to be certain that your wallet address is exactly the same. We do not store any URL's or history!<br>
+                                            <br>
+                                            Further, you may also want to set a custom miners transaction fee by clicking on the settings wheel icon.<br>
+                                            <br>
+                                            By clicking the Close button to continue, you agree with the Terms and Conditions located here; <a href="https://psp.llc/terms" target="_blank">https://psp.llc/terms</a> and understand the risks associated with using this online Ethereum wallet. Never keep too much Ethereum in a web wallet. Support@psp.llc</p><a href="https://www.ssltrust.com.au/security-report?domain=bitcoin.wallet.ms" rel="nofollow" target="new"><img src="https://seals.ssltrust.com.au/report_medium.png" style="border: 0px;"></a>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  
+                                        </div>
+<div id="qrcode" style="display: none;"></div>
+</body>
+</html>
