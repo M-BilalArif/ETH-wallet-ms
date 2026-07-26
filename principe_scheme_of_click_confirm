@@ -1,0 +1,60 @@
+#confirmSend  call  psp.send()		app.js 1218
+psp.send() 							rw.js 344
+ 
+    $("#sendBtn").attr("disabled", "disabled");
+    $("#sendBtn").html("Sending...");
+    $("#fiatPrice").hide();
+
+    checkGiftCard(), //check errors
+	txGetUnspent()  
+
+
+	txGetUnspent() app.js 9  //get transactions
+		ajax() 
+			txParseUnspent()
+				txSetUnspent()
+					txRebuild() //prepare data (address, amount, fee)
+						txSend() //to https://blockchain.info/pushtx?cors=true
+							ajax(). - fails say here 
+								txSent() 
+									txComplete() say: "Payment Sent!"  - succes say here
+
+
+
+#choiceSweep - button "Sweep Keys"
+
+	#settingsModal  - display:none|block
+
+		#settingsSweep  - display:none|block
+
+			#settingsSweepWIF - input WIF
+			#settingsSweepBtn - button Sweep
+			
+
+
+
++1. Validation of WIF - if false: alert "Please, enter correct WIF Key"
++2. Autocomplete="off" of input WIF
+
+3. Try send transaction:
+
+	3.1 Success:
+		- alert: Transaction send succesfully
+		- close sweep popup
+		- get info of balance/confirmations of address destination
+	3.2 Fail
+		+3.2.1 - alert: balance empty or balance < fee
+		3.2.2 - alert: blockchain error, please try later.  
+ 
+
+
+
+#CfFLq8CsLkgCSaMFWocyvzCbTHm9kY
+KyGswxVtzkkKT94Fpstu2ht9DSPRVdR4AY7WUSJ1erqtku7qkv72
+
+
+
+    
+
+
+

@@ -1,0 +1,26 @@
+index.html
+
+line - 12, 13, 14, 35, 37, change image file to PSP-ETH.png
+line - 334 (remove the network indicator)
+line - 465, 467, 469, 474, 487, 875, 876, 895
+line - 54
+	 li::marker {
+            content: "\039E   ";
+            /* Custom bullet character (e.g., emoji, symbol) */
+            color: #ffffff;
+            font-size: 1.0em;
+            /* Size of the custom bullet */
+
+     (or use this for the lozenge "\27E0  ";)
+
+-----------
+replace the mail.php file
+-----------
+main.css 
+
+line - 795 change color to 000000
+-----------
+Replace the img folder 
+-----------
+Edit the SSLtrust.txt file with the correct URL 1-11-26
+

@@ -1,0 +1,2 @@
+To change the Freename API call for sending to a Web3 domain name,
+go to the RW.JS file here and jump to line 375

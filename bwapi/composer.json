@@ -1,0 +1,20 @@
+{
+    "name": "vyacheslavkiselevich/api-merchant",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "KsSlava",
+            "email": "infomixks@gmail.com"
+        }
+    ],
+    "require": {
+        "bitwasp/bitcoin": "v0.0.35.2",
+        "nimiq/xpub": "^1.4",
+        "textalk/websocket": "^1.6",
+        "endroid/qrcode": "^4.8"
+    }
+}

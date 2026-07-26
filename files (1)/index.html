@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum Wallet Generator - PSP Logic</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 25px;
+            color: #856404;
+        }
+
+        .warning h3 {
+            margin-bottom: 10px;
+            color: #d32f2f;
+            font-size: 16px;
+        }
+
+        .warning p {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            margin-bottom: 30px;
+        }
+
+        button:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .output-section {
+            display: none;
+        }
+
+        .output-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .field-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #555;
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .output-field {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            background: #f9f9f9;
+            word-wrap: break-word;
+            resize: none;
+            transition: border-color 0.3s;
+        }
+
+        .output-field:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+        }
+
+        .note {
+            font-size: 11px;
+            color: #777;
+            margin-top: 5px;
+            font-style: italic;
+        }
+
+        .note.warning {
+            color: #d32f2f;
+            font-weight: bold;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 11px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+            transition: background 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ethereum Wallet Generator</h1>
+        <p class="subtitle">Using PSP Wallet Creation Logic</p>
+        
+        <div class="warning">
+            <h3>⚠️ SECURITY WARNING</h3>
+            <p><strong>NEVER use this online!</strong> True cold storage crypto wallets should only be created offline on an air-gapped computer. This tool demonstrates the PSP wallet generation process for educational purposes only. The private keys generated here should be considered compromised.</p>
+        </div>
+
+        <button id="createWalletBtn" onclick="createWallet()">🔐 Create Ethereum Wallet</button>
+
+        <div id="outputSection" class="output-section">
+            <div class="field-group">
+                <label>1. Generated Random Entropy</label>
+                <textarea id="randomInput" class="output-field" rows="2" readonly></textarea>
+                <p class="note">This random string is generated automatically (replaces manual input in PSP)</p>
+            </div>
+
+            <div class="field-group">
+                <label>2. MD5 Hash</label>
+                <textarea id="md5Hash" class="output-field" rows="2" readonly></textarea>
+                <button class="copy-btn" onclick="copyToClipboard('md5Hash')">Copy</button>
+                <p class="note">MD5 hash of the random entropy (Step 1 in PSP flow)</p>
+            </div>
+
+            <div class="field-group">
+                <label>3. SHA256 Hash (Private Key Seed)</label>
+                <textarea id="sha256Hash" class="output-field" rows="2" readonly></textarea>
+                <button class="copy-btn" onclick="copyToClipboard('sha256Hash')">Copy</button>
+                <p class="note">SHA256 of MD5 hash - used as the private key (Step 2 in PSP flow)</p>
+            </div>
+
+            <div class="field-group">
+                <label>4. Private Key (Hex Format)</label>
+                <textarea id="privateKey" class="output-field" rows="2" readonly></textarea>
+                <button class="copy-btn" onclick="copyToClipboard('privateKey')">Copy</button>
+                <p class="note warning">⚠️ NEVER SHARE THIS - Anyone with this key controls the wallet!</p>
+            </div>
+
+            <div class="field-group">
+                <label>5. Public Key (Uncompressed)</label>
+                <textarea id="publicKey" class="output-field" rows="3" readonly></textarea>
+                <button class="copy-btn" onclick="copyToClipboard('publicKey')">Copy</button>
+                <p class="note">Public key derived from private key using secp256k1 curve</p>
+            </div>
+
+            <div class="field-group">
+                <label>6. Ethereum Address</label>
+                <textarea id="address" class="output-field" rows="2" readonly></textarea>
+                <button class="copy-btn" onclick="copyToClipboard('address')">Copy</button>
+                <p class="note">✓ This is your Ethereum wallet address - safe to share for receiving funds</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>Implementation matches PSP wallet generation exactly</strong></p>
+            <p>Entropy → MD5 → SHA256 → Private Key → Public Key → ETH Address</p>
+        </div>
+    </div>
+
+    <!-- Load MD5 library (from PSP) -->
+    <script src="md5.js"></script>
+    
+    <!-- Load Web3 Ethereum Accounts library (from PSP) -->
+    <script src="web3-eth-accounts.js"></script>
+
+    <!-- Main Application Script -->
+    <script>
+        // Crypto-JS SHA256 implementation (minimal version for PSP compatibility)
+        var CryptoJS = CryptoJS || (function (Math, undefined) {
+            var C = {};
+            var C_lib = C.lib = {};
+            var Base = C_lib.Base = (function () {
+                function F() {}
+                return {
+                    extend: function (overrides) {
+                        F.prototype = this;
+                        var subtype = new F();
+                        if (overrides) {
+                            subtype.mixIn(overrides);
+                        }
+                        if (!subtype.hasOwnProperty('init')) {
+                            subtype.init = function () {
+                                subtype.$super.init.apply(this, arguments);
+                            };
+                        }
+                        subtype.init.prototype = subtype;
+                        subtype.$super = this;
+                        return subtype;
+                    },
+                    create: function () {
+                        var instance = this.extend();
+                        instance.init.apply(instance, arguments);
+                        return instance;
+                    },
+                    init: function () {
+                    },
+                    mixIn: function (properties) {
+                        for (var propertyName in properties) {
+                            if (properties.hasOwnProperty(propertyName)) {
+                                this[propertyName] = properties[propertyName];
+                            }
+                        }
+                        if (properties.hasOwnProperty('toString')) {
+                            this.toString = properties.toString;
+                        }
+                    },
+                    clone: function () {
+                        return this.init.prototype.extend(this);
+                    }
+                };
+            }());
+            var WordArray = C_lib.WordArray = Base.extend({
+                init: function (words, sigBytes) {
+                    words = this.words = words || [];
+                    if (sigBytes != undefined) {
+                        this.sigBytes = sigBytes;
+                    } else {
+                        this.sigBytes = words.length * 4;
+                    }
+                },
+                toString: function (encoder) {
+                    return (encoder || Hex).stringify(this);
+                },
+                concat: function (wordArray) {
+                    var thisWords = this.words;
+                    var thatWords = wordArray.words;
+                    var thisSigBytes = this.sigBytes;
+                    var thatSigBytes = wordArray.sigBytes;
+                    this.clamp();
+                    if (thisSigBytes % 4) {
+                        for (var i = 0; i < thatSigBytes; i++) {
+                            var thatByte = (thatWords[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+                            thisWords[(thisSigBytes + i) >>> 2] |= thatByte << (24 - ((thisSigBytes + i) % 4) * 8);
+                        }
+                    } else if (thatWords.length > 0xffff) {
+                        for (var i = 0; i < thatSigBytes; i += 4) {
+                            thisWords[(thisSigBytes + i) >>> 2] = thatWords[i >>> 2];
+                        }
+                    } else {
+                        thisWords.push.apply(thisWords, thatWords);
+                    }
+                    this.sigBytes += thatSigBytes;
+                    return this;
+                },
+                clamp: function () {
+                    var words = this.words;
+                    var sigBytes = this.sigBytes;
+                    words[sigBytes >>> 2] &= 0xffffffff << (32 - (sigBytes % 4) * 8);
+                    words.length = Math.ceil(sigBytes / 4);
+                },
+                clone: function () {
+                    var clone = Base.clone.call(this);
+                    clone.words = this.words.slice(0);
+                    return clone;
+                },
+                random: function (nBytes) {
+                    var words = [];
+                    var r = (function (m_w) {
+                        var m_w = m_w;
+                        var m_z = 0x3ade68b1;
+                        var mask = 0xffffffff;
+                        return function () {
+                            m_z = (0x9069 * (m_z & 0xFFFF) + (m_z >> 0x10)) & mask;
+                            m_w = (0x4650 * (m_w & 0xFFFF) + (m_w >> 0x10)) & mask;
+                            var result = ((m_z << 0x10) + m_w) & mask;
+                            result /= 0x100000000;
+                            result += 0.5;
+                            return result * (Math.random() > .5 ? 1 : -1);
+                        }
+                    });
+                    for (var i = 0, rcache; i < nBytes; i += 4) {
+                        var _r = r((rcache || Math.random()) * 0x100000000);
+                        rcache = _r() * 0x3ade67b7;
+                        words.push((_r() * 0x100000000) | 0);
+                    }
+                    return new WordArray.init(words, nBytes);
+                }
+            });
+            var C_enc = C.enc = {};
+            var Hex = C_enc.Hex = {
+                stringify: function (wordArray) {
+                    var words = wordArray.words;
+                    var sigBytes = wordArray.sigBytes;
+                    var hexChars = [];
+                    for (var i = 0; i < sigBytes; i++) {
+                        var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+                        hexChars.push((bite >>> 4).toString(16));
+                        hexChars.push((bite & 0x0f).toString(16));
+                    }
+                    return hexChars.join('');
+                },
+                parse: function (hexStr) {
+                    var hexStrLength = hexStr.length;
+                    var words = [];
+                    for (var i = 0; i < hexStrLength; i += 2) {
+                        words[i >>> 3] |= parseInt(hexStr.substr(i, 2), 16) << (24 - (i % 8) * 4);
+                    }
+                    return new WordArray.init(words, hexStrLength / 2);
+                }
+            };
+            var Latin1 = C_enc.Latin1 = {
+                stringify: function (wordArray) {
+                    var words = wordArray.words;
+                    var sigBytes = wordArray.sigBytes;
+                    var latin1Chars = [];
+                    for (var i = 0; i < sigBytes; i++) {
+                        var bite = (words[i >>> 2] >>> (24 - (i % 4) * 8)) & 0xff;
+                        latin1Chars.push(String.fromCharCode(bite));
+                    }
+                    return latin1Chars.join('');
+                },
+                parse: function (latin1Str) {
+                    var latin1StrLength = latin1Str.length;
+                    var words = [];
+                    for (var i = 0; i < latin1StrLength; i++) {
+                        words[i >>> 2] |= (latin1Str.charCodeAt(i) & 0xff) << (24 - (i % 4) * 8);
+                    }
+                    return new WordArray.init(words, latin1StrLength);
+                }
+            };
+            var Utf8 = C_enc.Utf8 = {
+                stringify: function (wordArray) {
+                    try {
+                        return decodeURIComponent(escape(Latin1.stringify(wordArray)));
+                    } catch (e) {
+                        throw new Error('Malformed UTF-8 data');
+                    }
+                },
+                parse: function (utf8Str) {
+                    return Latin1.parse(unescape(encodeURIComponent(utf8Str)));
+                }
+            };
+            var BufferedBlockAlgorithm = C_lib.BufferedBlockAlgorithm = Base.extend({
+                reset: function () {
+                    this._data = new WordArray.init();
+                    this._nDataBytes = 0;
+                },
+                _append: function (data) {
+                    if (typeof data == 'string') {
+                        data = Utf8.parse(data);
+                    }
+                    this._data.concat(data);
+                    this._nDataBytes += data.sigBytes;
+                },
+                _process: function (doFlush) {
+                    var data = this._data;
+                    var dataWords = data.words;
+                    var dataSigBytes = data.sigBytes;
+                    var blockSize = this.blockSize;
+                    var blockSizeBytes = blockSize * 4;
+                    var nBlocksReady = dataSigBytes / blockSizeBytes;
+                    if (doFlush) {
+                        nBlocksReady = Math.ceil(nBlocksReady);
+                    } else {
+                        nBlocksReady = Math.max((nBlocksReady | 0) - this._minBufferSize, 0);
+                    }
+                    var nWordsReady = nBlocksReady * blockSize;
+                    var nBytesReady = Math.min(nWordsReady * 4, dataSigBytes);
+                    if (nWordsReady) {
+                        for (var offset = 0; offset < nWordsReady; offset += blockSize) {
+                            this._doProcessBlock(dataWords, offset);
+                        }
+                        var processedWords = dataWords.splice(0, nWordsReady);
+                        data.sigBytes -= nBytesReady;
+                    }
+                    return new WordArray.init(processedWords, nBytesReady);
+                },
+                clone: function () {
+                    var clone = Base.clone.call(this);
+                    clone._data = this._data.clone();
+                    return clone;
+                },
+                _minBufferSize: 0
+            });
+            var Hasher = C_lib.Hasher = BufferedBlockAlgorithm.extend({
+                cfg: Base.extend(),
+                init: function (cfg) {
+                    this.cfg = this.cfg.extend(cfg);
+                    this.reset();
+                },
+                reset: function () {
+                    BufferedBlockAlgorithm.reset.call(this);
+                    this._doReset();
+                },
+                update: function (messageUpdate) {
+                    this._append(messageUpdate);
+                    this._process();
+                    return this;
+                },
+                finalize: function (messageUpdate) {
+                    if (messageUpdate) {
+                        this._append(messageUpdate);
+                    }
+                    var hash = this._doFinalize();
+                    return hash;
+                },
+                blockSize: 512 / 32,
+                _createHelper: function (hasher) {
+                    return function (message, cfg) {
+                        return new hasher.init(cfg).finalize(message);
+                    };
+                },
+                _createHmacHelper: function (hasher) {
+                    return function (message, key) {
+                        return new C_algo.HMAC.init(hasher, key).finalize(message);
+                    };
+                }
+            });
+            var C_algo = C.algo = {};
+            return C;
+        }(Math));
+        
+        (function (Math) {
+            var C = CryptoJS;
+            var C_lib = C.lib;
+            var WordArray = C_lib.WordArray;
+            var Hasher = C_lib.Hasher;
+            var C_algo = C.algo;
+            var H = [];
+            var K = [];
+            (function () {
+                function isPrime(n) {
+                    var sqrtN = Math.sqrt(n);
+                    for (var factor = 2; factor <= sqrtN; factor++) {
+                        if (!(n % factor)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                function getFractionalBits(n) {
+                    return ((n - (n | 0)) * 0x100000000) | 0;
+                }
+                var n = 2;
+                var nPrime = 0;
+                while (nPrime < 64) {
+                    if (isPrime(n)) {
+                        if (nPrime < 8) {
+                            H[nPrime] = getFractionalBits(Math.pow(n, 1 / 2));
+                        }
+                        K[nPrime] = getFractionalBits(Math.pow(n, 1 / 3));
+                        nPrime++;
+                    }
+                    n++;
+                }
+            }());
+            var W = [];
+            var SHA256 = C_algo.SHA256 = Hasher.extend({
+                _doReset: function () {
+                    this._hash = new WordArray.init(H.slice(0));
+                },
+                _doProcessBlock: function (M, offset) {
+                    var H = this._hash.words;
+                    var a = H[0];
+                    var b = H[1];
+                    var c = H[2];
+                    var d = H[3];
+                    var e = H[4];
+                    var f = H[5];
+                    var g = H[6];
+                    var h = H[7];
+                    for (var i = 0; i < 64; i++) {
+                        if (i < 16) {
+                            W[i] = M[offset + i] | 0;
+                        } else {
+                            var gamma0x = W[i - 15];
+                            var gamma0 = ((gamma0x << 25) | (gamma0x >>> 7)) ^
+                                          ((gamma0x << 14) | (gamma0x >>> 18)) ^
+                                           (gamma0x >>> 3);
+                            var gamma1x = W[i - 2];
+                            var gamma1 = ((gamma1x << 15) | (gamma1x >>> 17)) ^
+                                          ((gamma1x << 13) | (gamma1x >>> 19)) ^
+                                           (gamma1x >>> 10);
+                            W[i] = gamma0 + W[i - 7] + gamma1 + W[i - 16];
+                        }
+                        var ch = (e & f) ^ (~e & g);
+                        var maj = (a & b) ^ (a & c) ^ (b & c);
+                        var sigma0 = ((a << 30) | (a >>> 2)) ^ ((a << 19) | (a >>> 13)) ^ ((a << 10) | (a >>> 22));
+                        var sigma1 = ((e << 26) | (e >>> 6)) ^ ((e << 21) | (e >>> 11)) ^ ((e << 7) | (e >>> 25));
+                        var t1 = h + sigma1 + ch + K[i] + W[i];
+                        var t2 = sigma0 + maj;
+                        h = g;
+                        g = f;
+                        f = e;
+                        e = (d + t1) | 0;
+                        d = c;
+                        c = b;
+                        b = a;
+                        a = (t1 + t2) | 0;
+                    }
+                    H[0] = (H[0] + a) | 0;
+                    H[1] = (H[1] + b) | 0;
+                    H[2] = (H[2] + c) | 0;
+                    H[3] = (H[3] + d) | 0;
+                    H[4] = (H[4] + e) | 0;
+                    H[5] = (H[5] + f) | 0;
+                    H[6] = (H[6] + g) | 0;
+                    H[7] = (H[7] + h) | 0;
+                },
+                _doFinalize: function () {
+                    var data = this._data;
+                    var dataWords = data.words;
+                    var nBitsTotal = this._nDataBytes * 8;
+                    var nBitsLeft = data.sigBytes * 8;
+                    dataWords[nBitsLeft >>> 5] |= 0x80 << (24 - nBitsLeft % 32);
+                    dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 14] = Math.floor(nBitsTotal / 0x100000000);
+                    dataWords[(((nBitsLeft + 64) >>> 9) << 4) + 15] = nBitsTotal;
+                    data.sigBytes = dataWords.length * 4;
+                    this._process();
+                    return this._hash;
+                },
+                clone: function () {
+                    var clone = Hasher.clone.call(this);
+                    clone._hash = this._hash.clone();
+                    return clone;
+                }
+            });
+            C.SHA256 = Hasher._createHelper(SHA256);
+        }(Math));
+
+        // Generate random string for entropy (replaces user input in PSP)
+        function generateRandomString(length) {
+            const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+            let result = '';
+            const values = new Uint32Array(length);
+            window.crypto.getRandomValues(values);
+            for (let i = 0; i < length; i++) {
+                result += charset[values[i] % charset.length];
+            }
+            return result;
+        }
+
+        // Pad string to specific length (from PSP brainwallet.js line 165)
+        function pad(str, len, ch) {
+            let padding = '';
+            for (let i = 0; i < len - str.length; i++) {
+                padding += ch;
+            }
+            return padding + str;
+        }
+
+        // Copy to clipboard function
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            element.select();
+            document.execCommand('copy');
+            
+            // Visual feedback
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = '✓ Copied!';
+            btn.style.background = '#1e7e34';
+            setTimeout(() => {
+                btn.textContent = originalText;
+                btn.style.background = '#28a745';
+            }, 2000);
+        }
+
+        // Main wallet creation function - EXACT PSP FLOW
+        function createWallet() {
+            try {
+                // Step 1: Generate random entropy (replaces user input in PSP)
+                const randomInput = generateRandomString(64);
+                document.getElementById('randomInput').value = randomInput;
+                
+                // Step 2: Create MD5 hash (PSP line 20: document.getElementById('result').value = md5(input.value))
+                const md5Hash = md5(randomInput);
+                document.getElementById('md5Hash').value = md5Hash;
+                
+                // Step 3: Create SHA256 hash of MD5 (PSP genCalcHash function line 497)
+                // PSP uses: var hash = Crypto.SHA256($('#pass').val(), { asBytes: true });
+                // But the MD5 hash becomes the 'pass' value (line 21)
+                const sha256Hash = CryptoJS.SHA256(md5Hash).toString();
+                
+                // Step 4: Pad to 64 characters (PSP generateEthereum function line 248)
+                const paddedHash = pad(sha256Hash, 64, '0');
+                document.getElementById('sha256Hash').value = paddedHash;
+                
+                // Step 5: Create Ethereum account using Web3EthAccounts (PSP lines 251-254)
+                // const account = new Web3EthAccounts();
+                // const keyPair = account.create(paddedHash);
+                const account = new Web3EthAccounts();
+                const keyPair = account.create(paddedHash);
+                
+                // Step 6: Extract address and private key (PSP lines 253-254)
+                const addr = JSON.parse(JSON.stringify(keyPair.address));
+                const sec = JSON.parse(JSON.stringify(keyPair.privateKey));
+                
+                // Display results
+                document.getElementById('privateKey').value = sec;
+                document.getElementById('address').value = addr;
+                
+                // Get public key from the account object
+                // Web3EthAccounts doesn't directly expose public key in the same way
+                // But we can display it for completeness
+                if (keyPair.publicKey) {
+                    document.getElementById('publicKey').value = keyPair.publicKey;
+                } else {
+                    // The public key is implicitly derived but not always exposed
+                    // We'll show the private key info instead
+                    document.getElementById('publicKey').value = '(Public key derived internally from private key via secp256k1)';
+                }
+                
+                // Show output section with animation
+                document.getElementById('outputSection').classList.add('active');
+                
+                console.log('Wallet created successfully using PSP logic');
+                
+            } catch (error) {
+                alert('Error creating wallet: ' + error.message);
+                console.error('Wallet creation error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
